@@ -102,16 +102,22 @@ def index():
   cursor = g.conn.execute("SELECT name FROM executives")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append(result['name'])
+  cursor.close()
+
+  cursor = g.conn.execute("SELECT name FROM companies")
+  cnames = []
+  for result in cursor:
+    cnames.append(result['name'])
   cursor.close()
 
   cursor = g.conn.execute("SELECT name FROM universities")
   uNames = []
   for result in cursor:
-    uNames.append(result['name'])  # can also be accessed using result[0]
+    uNames.append(result['name'])
   cursor.close()
 
-  context = dict(data = names, udata = uNames)
+  context = dict(data = names, udata = uNames, cdata = cnames)
 
   return render_template("index.html", **context)
 

@@ -1,34 +1,36 @@
-<html>
-  <style>
-    body{ 
-      font-size: 15pt;
-      font-family: arial;
-    }
-  </style>
-
-
-<body>
-  <h1>Some famous executives</h1>
-
-  <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
-	<br>
-  <div>
-    {% for n in udata %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
-
-<p><a href="another">Go to the other page</a></p>
-
-<form method="POST" action="/add">
-<p>Name of executive: <input type="text" name="name"> <input type="submit" value="Add"></p>
-</form>
-
-</body>
-
-
-</html>
+{% extends "layout.html" %}
+{% block content %}
+<div class="row mt-3">
+	<div class=".col-4 mx-auto">
+		<h1>Executives in the News</h1>
+		<div>
+			{% for n in data %}
+			<div>{{n}}</div>
+			{% endfor %}
+		</div>
+		<br>
+	</div>
+	<div class=".col-4 mx-auto">
+		<h1>Companies</h1>
+		<div>
+			{% for n in cdata %}
+			<div>{{n}}</div>
+			{% endfor %}
+		</div>
+		<br>
+	</div>
+	<div class=".col-4 mx-auto">
+		<h1>Universities</h1>
+		<div>
+			{% for n in udata %}
+			<div>{{n}}</div>
+			{% endfor %}
+		</div>
+	</div>
+	</div>
+	<div class="row mt-3">
+		<form class="mx-auto" method="POST" action="/add">
+		<p>Name of executive: <input type="text" name="name"> <input type="submit" disabled="disabled" value="Add"></p>
+		</form>
+	</div>
+{% endblock content %}

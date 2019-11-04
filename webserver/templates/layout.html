@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <!-- Bootstrap CSS -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+  </head>
+  <style>
+
+  body {
+    margin: 0 auto;
+    padding-top: 10px;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: bold;
+    font-family: Rye;
+  }
+
+  a {
+    display: block;
+    text-decoration-color: black!important;
+  }
+
+  .noDecoration, a:link, a:visited {
+      text-decoration: none!important;
+  }
+
+  h2 {
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  img {
+    height: auto;
+    padding-top: 10px;
+  }
+
+  #searchBar {
+	  font-size: 12px;
+		height: 40px;
+	}
+
+  .navbar {
+		border-radius: 15px;
+	  height: 50px;
+	}
+
+	.fonty {
+	  font-family: Roboto;
+	}
+  </style>
+
+  <body>
+   <div class="container" id="pageContainer">
+     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand fonty" href="/">Corporate Governance DB</a><span class="sr-only">(current)</span>
+        <form class="form-inline d-flex justify-content-end my-2 my-lg-0">
+           <input class="form-control ml-5 mr-sm-2" id="searchBar" type="text" placeholder="Search" aria-label="Search">
+           <button class="btn btn-outline-light my-2 my-sm-0 fonty" id="searchButton" type="button">Search</button>
+        </form>
+    </nav>
+   </div>
+   <div class="container">
+		  {% block content %}{% endblock %}
+   </div>
+  </body>
+</html
