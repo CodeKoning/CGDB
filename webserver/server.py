@@ -121,9 +121,14 @@ def index():
 
   return render_template("index.html", **context)
 
-@app.route('/another')
-def another():
-  return render_template("another.html")
+@app.route('/university/<int:uid>')
+def show_uni(uid=None):
+  uni_id = uid
+  cursor = g.conn.execute("SELECT name FROM universities WHERE universities.uid = %s", (uni_id))
+  uname = cursor.fetchone()[0]
+  context = dict(udata = uname)
+
+  return render_template("university.html", **context)
 
 
 # Example of adding new data to the database
