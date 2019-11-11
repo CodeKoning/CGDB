@@ -124,9 +124,16 @@ def index():
 @app.route('/university/<int:uid>')
 def show_uni(uid=None):
   uni_id = uid
-  cursor = g.conn.execute("SELECT name FROM universities WHERE universities.uid = %s", (uni_id))
-  uname = cursor.fetchone()[0]
-  context = dict(udata = uname)
+  cursor = g.conn.execute("SELECT * FROM universities WHERE universities.uid = %s", (uni_id))
+  uname = cursor.fetchone()
+
+  cursor = g.conn.execute("SELECT * FROM executives e, education ed WHERE ed.uid = %s AND e.eid = ed.eid", (uni_id))
+  alums = []
+  for result in cursor:
+    alums.append(result)
+
+  cursor.close()
+  context = dict(udata = uname, alum_arr = alums)
 
   return render_template("university.html", **context)
 

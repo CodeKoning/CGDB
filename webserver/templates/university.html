@@ -1,6 +1,30 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="row mt-3">
-		<h1>{{ udata }}</h1>
+		<h2>{{ udata["name"] }}</h2>
 </div>
+<div class="row mt-1">
+		<p>{{ udata["city"] }}, {{ udata["state"] }}</p>
+</div>
+<div class="row mt-3">
+	<h2>Executive Alumni</h2>
+</div>
+		{% for data in alum_arr %}
+			<div class="accordion" id="accordionExample">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+						<h1 class="mb-0">{{data["name"]}}</h1>
+					</div>
+					<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+						<div class="card-body">
+							{% if data["grad_year"] is none %}
+								<strong>Age:</strong> {{data["age"]}} <strong>Degree:</strong>{{data["degree"]}} <strong>Major:</strong>{{data["major"]}}
+							{% else %}
+								<strong>Age:</strong> {{data["age"]}} <strong>Degree:</strong>{{data["degree"]}} <strong>Major:</strong>{{data["major"]}} <strong>Graduation Year:</strong>{{data["grad_year"]}}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
 {% endblock content %}
