@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row mt-3">
+		<h2>{{ edata["name"] }}</h2>
+</div>
+<div class="row mt-3">
+	<h2>Founder of</h2>
+</div>
+<div class="row mt-3">
+{% if e_arr is none %}
+		<p>{{edata["name"]}} has not founded any companies in the database.</p>
+{% else %}
+	{% for n in e_arr %}
+		<p class="pl-5">{{ e_arr[loop.index0][0] }}</p>
+	{% endfor %}
+{% endif %}
+</div>
+{% endblock content %}

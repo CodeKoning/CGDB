@@ -99,19 +99,19 @@ def index():
   # DEBUG: this is debugging code to see what request looks like
   print(request.args)
 
-  cursor = g.conn.execute("SELECT name FROM executives")
+  cursor = g.conn.execute("SELECT name FROM executives ORDER BY eid")
   names = []
   for result in cursor:
     names.append(result['name'])
   cursor.close()
 
-  cursor = g.conn.execute("SELECT name FROM companies")
+  cursor = g.conn.execute("SELECT name FROM companies ORDER BY cid")
   cnames = []
   for result in cursor:
     cnames.append(result['name'])
   cursor.close()
 
-  cursor = g.conn.execute("SELECT name FROM universities")
+  cursor = g.conn.execute("SELECT name FROM universities ORDER BY uid")
   uNames = []
   for result in cursor:
     uNames.append(result['name'])
@@ -137,6 +137,34 @@ def show_uni(uid=None):
 
   return render_template("university.html", **context)
 
+@app.route('/executive/<int:eid>')
+def show_exec(eid=None):
+  exec_id = eid
+  cursor = g.conn.execute("SELECT * FROM executives WHERE executives.eid = %s", (exec_id))
+  ename = cursor.fetchone()
+
+  cursor = g.conn.execute("SELECT c.name FROM executives e, companies c, founded_by f WHERE e.eid = %s AND e.eid = f.eid AND c.cid = f.cid", (exec_id))
+  execs = []
+  for result in cursor:
+      execs.append(result)
+
+  cursor.close()
+  context = dict(edata = ename, e_arr = execs)
+
+  return render_template("executive.html", **context)
+
+@app.route('/company/<int:cid>')
+def show_comp(cid=None):
+  comp_id = cid
+  cursor = g.conn.execute("SELECT name FROM companies WHERE companies.cid = %s", (comp_id))
+  cname = cursor.fetchone()
+
+  #cursor = g.conn.execute("SELECT * FROM executives e, education ed WHERE ed.uid = %s AND e.eid = ed.eid", (uni_id))
+
+  cursor.close()
+  context = dict(cdata = cname)
+
+  return render_template("company.html", **context)
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])

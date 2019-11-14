@@ -3,30 +3,33 @@
 <div class="row mt-3">
 	<div class=".col-4 mx-auto">
 		<h1>Executives in the News</h1>
-		<div>
+		<div class="card" style="width: 18rem;">
+		  <ul class="list-group list-group-flush">
 			{% for n in data %}
-			<div>{{n}}</div>
+				<li class="list-group-item"><a href={{url_for('show_exec', eid=loop.index)}}>{{n}}</a></li>
 			{% endfor %}
+			</ul>
 		</div>
-		<br>
 	</div>
 	<div class=".col-4 mx-auto">
-		<h1>Companies</h1>
-		<div>
+		<h1>Companies in the News</h1>
+		<div class="card" style="width: 18rem;">
+		  <ul class="list-group list-group-flush">
 			{% for n in cdata %}
-			<div>{{n}}</div>
+				<li class="list-group-item"><a href={{url_for('show_comp', cid=loop.index)}}>{{n}}</a></li>
 			{% endfor %}
+			</ul>
 		</div>
-		<br>
 	</div>
 	<div class=".col-4 mx-auto">
-		<h1>Universities</h1>
-		<div>
+		<h1>Universities of Executives</h1>
+		<div class="card" style="width: 18rem;">
+		  <ul class="list-group list-group-flush">
 			{% for n in udata %}
-			<div>{{n}}</div>
+				<li class="list-group-item"><a href={{url_for('show_uni', uid=loop.index)}}>{{n}}</a></li>
 			{% endfor %}
+			</ul>
 		</div>
-	</div>
 	</div>
 	<div class="row mt-3">
 		<form class="mx-auto" method="POST" action="/add">
