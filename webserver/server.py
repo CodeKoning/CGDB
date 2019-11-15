@@ -164,8 +164,13 @@ def show_comp(cid=None):
   for officer in cursor:
       officers.append(officer)
 
+  cursor = g.conn.execute("SELECT DISTINCT e.name, d.dir_title FROM executives e, directors d, companies c, member_of m, governed_board g WHERE e.eid = d.eid AND d.eid = m.eid AND m.bid = g.bid AND g.cid = %s", (comp_id))
+  board_mems = []
+  for member in cursor:
+      board_mems.append(member)
+
   cursor.close()
-  context = dict(cdata = cname, off_arr = officers)
+  context = dict(cdata = cname, off_arr = officers, board_arr = board_mems)
 
   return render_template("company.html", **context)
 
