@@ -144,12 +144,12 @@ def show_exec(eid=None):
   ename = cursor.fetchone()
 
   cursor = g.conn.execute("SELECT c.name FROM executives e, companies c, founded_by f WHERE e.eid = %s AND e.eid = f.eid AND c.cid = f.cid", (exec_id))
-  execs = []
+  founded = []
   for result in cursor:
-      execs.append(result)
+      founded.append(result)
 
   cursor.close()
-  context = dict(edata = ename, e_arr = execs)
+  context = dict(edata = ename, founded_arr = founded)
 
   return render_template("executive.html", **context)
 
@@ -159,10 +159,13 @@ def show_comp(cid=None):
   cursor = g.conn.execute("SELECT name FROM companies WHERE companies.cid = %s", (comp_id))
   cname = cursor.fetchone()
 
-  #cursor = g.conn.execute("SELECT * FROM executives e, education ed WHERE ed.uid = %s AND e.eid = ed.eid", (uni_id))
+  cursor = g.conn.execute("SELECT DISTINCT e.name, o.officer_title FROM executives e, officers o, companies c, works_in w WHERE e.eid = o.eid AND o.eid =  w.eid AND w.cid = %s ORDER BY o.officer_title", (comp_id))
+  officers = []
+  for officer in cursor:
+      officers.append(officer)
 
   cursor.close()
-  context = dict(cdata = cname)
+  context = dict(cdata = cname, off_arr = officers)
 
   return render_template("company.html", **context)
 
