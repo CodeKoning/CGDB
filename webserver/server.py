@@ -1,4 +1,3 @@
-
 """
 Columbia's COMS W4111.001 Introduction to Databases
 Example Webserver
@@ -12,7 +11,7 @@ import os
   # accessible as a variable in index.html:
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response
+from flask import Flask, request, render_template, g, redirect, Response, url_for, flash
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -70,7 +69,6 @@ def teardown_request(exception):
   except Exception as e:
     pass
 
-
 #
 # @app.route is a decorator around index() that means:
 #   run index() whenever the user tries to access the "/" path using a GET request
@@ -121,6 +119,46 @@ def index():
 
   return render_template("index.html", **context)
 
+@app.route('/search', methods=['POST'])
+def search():
+  query = request.form['search_query']
+  print(query)
+  cursor = g.conn.execute("SELECT name FROM executives ORDER BY eid")
+  eindex = []
+  for entry in cursor:
+    eindex.append(entry['name'])
+
+  cursor = g.conn.execute("SELECT name FROM companies ORDER BY cid")
+  cindex = []
+  for entry in cursor:
+    cindex.append(entry['name'])
+
+  cursor = g.conn.execute("SELECT name FROM universities ORDER BY uid")
+  uindex = []
+  for entry in cursor:
+    uindex.append(entry['name'])
+  print(uindex)
+
+  if query in eindex:
+    cursor = g.conn.execute("SELECT e.eid from executives e where e.name = %s", (query))
+    eid = cursor.fetchone()['eid']
+    cursor.close()
+    return redirect(url_for('show_exec', eid=eid))
+  elif query in cindex:
+    cursor = g.conn.execute("SELECT c.cid from companies c where c.name = %s", (query))
+    cid = cursor.fetchone()['cid']
+    cursor.close()
+    return redirect(url_for('show_comp', cid=cid))
+  elif query in uindex:
+    cursor = g.conn.execute("SELECT u.uid from universities u where u.name = %s", (query))
+    uid = cursor.fetchone()['uid']
+    cursor.close()
+    return redirect(url_for('show_uni', uid=uid))
+  else:
+    cursor.close()
+#    flash('Search query is not in the database')
+    return redirect(url_for('index'))
+
 @app.route('/university/<int:uid>')
 def show_uni(uid=None):
   uni_id = uid
@@ -159,6 +197,11 @@ def show_comp(cid=None):
   cursor = g.conn.execute("SELECT name FROM companies WHERE companies.cid = %s", (comp_id))
   cname = cursor.fetchone()
 
+  cursor = g.conn.execute("SELECT e.name, f.inception_year FROM executives e, companies c, founded_by f WHERE c.cid = %s AND e.eid = f.eid AND c.cid = f.cid", (comp_id))
+  founded = []
+  for result in cursor:
+      founded.append(result)
+
   cursor = g.conn.execute("SELECT DISTINCT e.name, o.officer_title FROM executives e, officers o, companies c, works_in w WHERE e.eid = o.eid AND o.eid =  w.eid AND w.cid = %s ORDER BY o.officer_title", (comp_id))
   officers = []
   for officer in cursor:
@@ -170,7 +213,7 @@ def show_comp(cid=None):
       board_mems.append(member)
 
   cursor.close()
-  context = dict(cdata = cname, off_arr = officers, board_arr = board_mems)
+  context = dict(cdata = cname, off_arr = officers, board_arr = board_mems, founded_arr = founded)
 
   return render_template("company.html", **context)
 

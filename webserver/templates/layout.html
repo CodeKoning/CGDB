@@ -19,13 +19,13 @@
   h1 {
     font-size: 22px;
     font-weight: bold;
-    font-family: Rye;
+    font-family: Roboto;
   }
 
   a {
     display: block;
     text-decoration-color: black!important;
-  }
+}
 
   .noDecoration, a:link, a:visited {
       text-decoration: none!important;
@@ -69,9 +69,9 @@
    <div class="container" id="pageContainer">
      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand fonty" href="/">Corporate Governance DB</a><span class="sr-only">(current)</span>
-        <form class="form-inline d-flex justify-content-end my-2 my-lg-0">
-           <input class="form-control ml-5 mr-sm-2" id="searchBar" type="text" placeholder="Search" aria-label="Search">
-           <button class="btn btn-outline-light my-2 my-sm-0 fonty" id="searchButton" type="button">Search</button>
+        <form class="form-inline d-flex justify-content-end my-2 my-lg-0" action="/search" method="post">
+           <input class="form-control ml-5 mr-sm-2" id="searchBar" type="text" name="search_query" placeholder="Search" aria-label="Search">
+           <button class="btn btn-outline-light my-2 my-sm-0 fonty" id="searchButton" type="submit">Search</button>
         </form>
     </nav>
    </div>
