@@ -156,7 +156,7 @@ def search():
     return redirect(url_for('show_uni', uid=uid))
   else:
     cursor.close()
-#    flash('Search query is not in the database')
+#   flash('Search query is not in the database') - Does not work without app secrets, will just redirect to index and annotate the README.
     return redirect(url_for('index'))
 
 @app.route('/university/<int:uid>')
