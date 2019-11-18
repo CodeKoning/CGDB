@@ -207,13 +207,28 @@ def show_comp(cid=None):
   for officer in cursor:
       officers.append(officer)
 
-  cursor = g.conn.execute("SELECT DISTINCT e.name, d.dir_title FROM executives e, directors d, companies c, member_of m, governed_board g WHERE e.eid = d.eid AND d.eid = m.eid AND m.bid = g.bid AND g.cid = %s", (comp_id))
+  cursor = g.conn.execute("SELECT DISTINCT e.name, d.dir_title, e.eid FROM executives e, directors d, companies c, member_of m, governed_board g WHERE e.eid = d.eid AND d.eid = m.eid AND m.bid = g.bid AND g.cid = %s", (comp_id))
   board_mems = []
   for member in cursor:
       board_mems.append(member)
 
+  cursor = g.conn.execute("SELECT cmte.name FROM overseen_committee cmte, governed_board b, companies c WHERE b.cid = c.cid AND cmte.bid = b.bid AND c.cid = %s", (comp_id))
+  committees = []
+  for cmte in cursor:
+      committees.append(cmte)
+
+  cursor = g.conn.execute("SELECT c.name, s.subsidiary_id from subsidiary_of s, companies c where s.parent_id = %s AND c.cid = s.subsidiary_id", (comp_id))
+  subsidiaries = []
+  for sub in cursor:
+      subsidiaries.append(sub)
+
+  cursor = g.conn.execute("SELECT c.name, s.parent_id from subsidiary_of s, companies c where s.subsidiary_id = %s AND c.cid = s.parent_id", (comp_id))
+  parent = []
+  for p in cursor:
+      parent.append(p)
+
   cursor.close()
-  context = dict(cdata = cname, off_arr = officers, board_arr = board_mems, founded_arr = founded)
+  context = dict(cdata = cname, off_arr = officers, board_arr = board_mems, founded_arr = founded, cmte_arr = committees, sub_arr = subsidiaries, par_arr = parent)
 
   return render_template("company.html", **context)
 

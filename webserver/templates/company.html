@@ -8,13 +8,33 @@
 		<p class="pl-2">Founded in {{ n["inception_year"] }} by {{ n["name"] }}</p>
 	{% endfor %}
 </div>
+{% if par_arr|length %}
+	<div class="row mt-3">
+		<h2>Parent Company</h2>
+	</div>
+	<div class="row mt-3">
+		{% for n in par_arr %}
+				<p class="pl-2"><a href={{url_for('show_comp', cid=n["parent_id"])}}>{{n["name"]}}</a></p>
+		{% endfor %}
+	</div>
+{% endif %}
+{% if sub_arr|length %}
+	<div class="row mt-3">
+		<h2>Subsidiaries</h2>
+	</div>
+	<div class="row mt-3">
+		{% for n in sub_arr %}
+			<p class="pl-2"><a href={{url_for('show_comp', cid=n["subsidiary_id"])}}>{{n["name"]}}</a></p>
+		{% endfor %}
+	</div>
+{% endif %}
 <div class="row mt-3">
 		<h2>Officers</h2>
 </div>
 <div class="row mt-3">
 	{% for n in off_arr %}
-		<p class="pl-5 font-weight-bold">{{ n["officer_title"] }}:</p>
-		<p class="pl-2">{{ n["name"] }}</p>
+		<p class="pl-2 font-weight-bold">{{ n["officer_title"] }}:</p>
+		<p class="pl-2 pr-5">{{ n["name"] }}</p>
 	{% endfor %}
 </div>
 <div class="row mt-3">
@@ -22,9 +42,19 @@
 </div>
 <div class="row mt-3">
 	{% for n in board_arr %}
-		<p class="pl-5 font-weight-bold">{{ n["dir_title"] }}:</p>
-		<p class="pl-2">{{ n["name"] }}</p>
+		<p class="pl-2 font-weight-bold">{{ n["dir_title"] }}</p>
+		<p class="pl-2 pr-5"><a href={{url_for('show_exec', eid=n["eid"])}}>{{ n["name"] }}</a></p>
 	{% endfor %}
+</div>
+<div class="row mt-3">
+		<h2>Current Committees</h2>
+</div>
+<div class="row mt-3">
+	<ul class="list-group">
+		{% for n in cmte_arr %}
+			<li class="list-group-item">{{ n["name"] }}</li>
+		{% endfor %}
+	</ul>
 </div>
 
 {% endblock content %}
