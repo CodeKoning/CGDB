@@ -6,7 +6,7 @@
 		<div class="card" style="width: 18rem;">
 		  <ul class="list-group list-group-flush">
 			{% for n in data %}
-				<li class="list-group-item"><a class="noDecoration" href={{url_for('show_exec', eid=loop.index, query='')}}>{{n}}</a></li>
+				<li class="list-group-item"><a class="noDecoration" href={{url_for('show_exec', eid=loop.index, query='No search entry')}}>{{n}}</a></li>
 			{% endfor %}
 			</ul>
 		</div>
