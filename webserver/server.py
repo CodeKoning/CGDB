@@ -122,7 +122,15 @@ def index():
 @app.route('/search', methods=['POST'])
 def search():
   query = request.form['search_query']
-  print(query)
+  word_list = query.rsplit(sep=None)
+  print(word_list)
+  last_word = word_list[len(word_list) - 1]
+  word_chain = ''
+  for i in range(len(word_list) - 1):
+    word_chain += (word_list[i] + ' & ')
+  word_chain = word_chain + last_word
+  print(word_chain)
+  
   cursor = g.conn.execute("SELECT name FROM executives ORDER BY eid")
   eindex = []
   for entry in cursor:
@@ -137,13 +145,24 @@ def search():
   uindex = []
   for entry in cursor:
     uindex.append(entry['name'])
-  print(uindex)
 
-  if query in eindex:
+  cursor = g.conn.execute("select name from executives where searchable_idx_col @@ to_tsquery(%s)", (word_chain))
+  fsearch = cursor.fetchone()
+  for entry in cursor:
+    fsearch.append(entry['name'])
+  print(uindex)
+  print(fsearch)
+
+  if len(fsearch) > 0:
+    cursor = g.conn.execute("SELECT e.eid from executives e where e.name = %s", (fsearch))
+    eid = cursor.fetchone()['eid']
+    cursor.close()
+    return redirect(url_for('show_exec', eid=eid, query=query))
+  elif query in eindex:
     cursor = g.conn.execute("SELECT e.eid from executives e where e.name = %s", (query))
     eid = cursor.fetchone()['eid']
     cursor.close()
-    return redirect(url_for('show_exec', eid=eid))
+    return redirect(url_for('show_exec', eid=eid, query=query))
   elif query in cindex:
     cursor = g.conn.execute("SELECT c.cid from companies c where c.name = %s", (query))
     cid = cursor.fetchone()['cid']
@@ -175,11 +194,15 @@ def show_uni(uid=None):
 
   return render_template("university.html", **context)
 
-@app.route('/executive/<int:eid>')
-def show_exec(eid=None):
+@app.route('/executive/<int:eid>/<string:query>')
+def show_exec(eid=None, query=None):
   exec_id = eid
+  query = query
   cursor = g.conn.execute("SELECT * FROM executives WHERE executives.eid = %s", (exec_id))
   ename = cursor.fetchone()
+
+  cursor = g.conn.execute("SELECT bio FROM executives WHERE executives.eid = %s", (exec_id))
+  bio = cursor.fetchone()
 
   cursor = g.conn.execute("SELECT c.name FROM executives e, companies c, founded_by f WHERE e.eid = %s AND e.eid = f.eid AND c.cid = f.cid", (exec_id))
   founded = []
@@ -187,7 +210,7 @@ def show_exec(eid=None):
       founded.append(result)
 
   cursor.close()
-  context = dict(edata = ename, founded_arr = founded)
+  context = dict(edata = ename, bio = bio, query = query, founded_arr = founded)
 
   return render_template("executive.html", **context)
 

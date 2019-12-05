@@ -3,6 +3,9 @@
 	<div class="row mt-3">
 			<h2>{{ edata["name"] }}</h2>
 	</div>
+	<div class="row mt-3">
+			<p>{{ bio["bio"] }}</p>
+	</div>
 	{% if founded_arr|length %}
 		<div class="row mt-3">
 			<h2>Founder of</h2>
@@ -14,4 +17,7 @@
 		</div>
 		{% else %}
 	{% endif %}
+	<div class="row mt-3">
+		<p><strong>Search query found on page:</strong> {{ query }}</p>
+	</div>
 {% endblock content %}
